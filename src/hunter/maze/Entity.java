@@ -13,8 +13,6 @@ import java.awt.Rectangle;
  * that an entity can move a partial pixel. It doesn't of course mean that
  * they will be display half way through a pixel but allows us not lose
  * accuracy as we move.
- * 
- * @author Kevin Glass
  */
 public abstract class Entity {
 	/** The current x location of this entity */ 
@@ -49,14 +47,13 @@ public abstract class Entity {
 	}
 	
 	/**
-	 * Request that this entity move itself based on a certain ammount
+	 * Request that this entity move itself based on a certain amount
 	 * of time passing.
 	 * 
-	 * @param delta The ammount of time that has passed in milliseconds
+	 * @param delta The amount of time that has passed in milliseconds
 	 */
 	public void move(long delta) {
 		// update the location of the entity based on move speeds
-
 		x += (delta * dx) / 1000;
 		y += (delta * dy) / 1000;
 	}
@@ -147,7 +144,7 @@ public abstract class Entity {
 	}
 	
 	/**
-	 * Check if this entity collised with another.
+	 * Check if this entity collides with another.
 	 * 
 	 * @param other The other entity to check collision against
 	 * @return True if the entities collide with each other

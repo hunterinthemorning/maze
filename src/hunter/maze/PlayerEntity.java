@@ -4,11 +4,7 @@ import hunter.maze.AlienEntity;
 import hunter.maze.Entity;
 import hunter.maze.Game;
 
-/**
- * The entity that represents the players ship
- * 
- * @author Kevin Glass
- */
+/**The entity that represents the players ship**/
 public class PlayerEntity extends Entity {
 	/** The game in which the ship exists */
 	private Game game;
@@ -28,7 +24,7 @@ public class PlayerEntity extends Entity {
 	}
 	
 	/**
-	 * Request that the ship move itself based on an elapsed ammount of
+	 * Request that the ship move itself based on an elapsed amount of
 	 * time
 	 * 
 	 * @param delta The time that has elapsed since last move (ms)

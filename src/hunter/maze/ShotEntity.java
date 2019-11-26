@@ -7,7 +7,7 @@ package hunter.maze;
  */
 public class ShotEntity extends Entity {
 	/** The vertical speed at which the players shot moves */
-	private double moveSpeed = -300;
+	private double moveSpeed = 300;
 	/** The game in which this entity exists */
 	private Game game;
 	/** True if this shot has been "used", i.e. its hit something */
@@ -25,11 +25,56 @@ public class ShotEntity extends Entity {
 		super(sprite,x,y,vector);
 		
 		this.game = game;
-		
-		dy = moveSpeed;
-		//added for shot entity to travel in the direction the player is moving
-		//prior to, shot entity only traveled in the -y direction
-		dx = moveSpeed;
+		//change the direction of the shot entity based off of the direction the player is facing
+		switch (vector) {
+			case 0:
+				dx = 0;
+				dy = -moveSpeed;
+				this.x += 10;
+				this.y -= 30;
+				break;
+			case 45:
+				dx = moveSpeed;
+				dy = -moveSpeed;
+				this.x += 30;
+				this.y -= 30;
+				break;
+			case 90:
+				dx = moveSpeed;
+				dy = 0;
+				this.x += 30;
+				break;
+			case 135:
+				dx = moveSpeed;
+				dy = moveSpeed;
+				this.x += 30;
+				this.y += 30;
+				break;
+			case 180:
+				dx = 0;
+				dy = moveSpeed;
+				this.y += 30;
+				this.x += 10;
+				break;
+			case 225:
+				dx = -moveSpeed;
+				dy = moveSpeed;
+				this.x -= 30;
+				this.y += 30;
+				break;
+			case 270:
+				dx = -moveSpeed;
+				dy = 0;
+				this.x -= 30;
+				break;
+			case 315:
+				dx = -moveSpeed;
+				dy = -moveSpeed;
+				this.x -= 30;
+				this.y -= 30;
+				break;
+		}
+		System.out.printf("vector:%s dx:%s dy:%s\n", vector, dx, dy);
 	}
 
 	/**
