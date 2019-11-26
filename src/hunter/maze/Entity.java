@@ -19,8 +19,8 @@ public abstract class Entity {
 	protected double x;
 	/** The current y location of this entity */
 	protected double y;
-	/* The directional vector the player is facing */ 
-	protected int vector;
+	//The direction the entity is facing
+	protected double vector;
 	/** The sprite that represents this entity */
 	protected Sprite sprite;
 	/** The current speed of this entity horizontally (pixels/sec) */
@@ -39,7 +39,7 @@ public abstract class Entity {
  	 * @param x The initial x location of this entity
 	 * @param y The initial y location of this entity
 	 */
-	public Entity(String ref,int x,int y, int vector) {
+	public Entity(String ref,int x,int y,int vector) {
 		this.sprite = SpriteStore.get().getSprite(ref);
 		this.x = x;
 		this.y = y;
@@ -83,7 +83,7 @@ public abstract class Entity {
 		this.dy = dy;
 	}
 	
-	public void setVector(int vector) {
+	public void setVector(double vector) {
 		this.vector = vector;
 	}
 	
@@ -105,7 +105,7 @@ public abstract class Entity {
 		return dy;
 	}
 	
-	public int getVector() {
+	public double getVector() {
 		return vector;
 	}
 	

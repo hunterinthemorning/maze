@@ -2,8 +2,6 @@ package hunter.maze;
 
 /**
  * An entity representing a shot fired by the player's ship
- * 
- * @author Kevin Glass
  */
 public class ShotEntity extends Entity {
 	/** The vertical speed at which the players shot moves */
@@ -21,60 +19,11 @@ public class ShotEntity extends Entity {
 	 * @param x The initial x location of the shot
 	 * @param y The initial y location of the shot
 	 */
-	public ShotEntity(Game game,String sprite,int x,int y, int vector) {
+	public ShotEntity(Game game,String sprite,int x,int y,int vector,int dx,int dy) {
 		super(sprite,x,y,vector);
-		
 		this.game = game;
-		//change the direction of the shot entity based off of the direction the player is facing
-		switch (vector) {
-			case 0:
-				dx = 0;
-				dy = -moveSpeed;
-				this.x += 10;
-				this.y -= 30;
-				break;
-			case 45:
-				dx = moveSpeed;
-				dy = -moveSpeed;
-				this.x += 30;
-				this.y -= 30;
-				break;
-			case 90:
-				dx = moveSpeed;
-				dy = 0;
-				this.x += 30;
-				break;
-			case 135:
-				dx = moveSpeed;
-				dy = moveSpeed;
-				this.x += 30;
-				this.y += 30;
-				break;
-			case 180:
-				dx = 0;
-				dy = moveSpeed;
-				this.y += 30;
-				this.x += 10;
-				break;
-			case 225:
-				dx = -moveSpeed;
-				dy = moveSpeed;
-				this.x -= 30;
-				this.y += 30;
-				break;
-			case 270:
-				dx = -moveSpeed;
-				dy = 0;
-				this.x -= 30;
-				break;
-			case 315:
-				dx = -moveSpeed;
-				dy = -moveSpeed;
-				this.x -= 30;
-				this.y -= 30;
-				break;
-		}
-		System.out.printf("vector:%s dx:%s dy:%s\n", vector, dx, dy);
+		this.dx = dx*moveSpeed;
+		this.dy = dy*moveSpeed;
 	}
 
 	/**
@@ -101,7 +50,7 @@ public class ShotEntity extends Entity {
 	 * Notification that this shot has collided with another
 	 * entity
 	 * 
-	 * @parma other The other entity with which we've collided
+	 * @param other The other entity with which we've collided
 	 */
 	public void collidedWith(Entity other) {
 		// prevents double kills, if we've already hit something,

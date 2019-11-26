@@ -17,9 +17,8 @@ public class PlayerEntity extends Entity {
 	 * @param x The initial x location of the player's ship
 	 * @param y The initial y location of the player's ship
 	 */
-	public PlayerEntity(Game game,String ref,int x,int y, int vector) {
+	public PlayerEntity(Game game,String ref,int x,int y,int vector) {
 		super(ref,x,y,vector);
-		
 		this.game = game;
 	}
 	

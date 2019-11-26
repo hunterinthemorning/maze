@@ -56,36 +56,28 @@ public class Game extends Canvas {
 	 */
 	public Game() {
 		// create a frame to contain our game
-
 		JFrame container = new JFrame("Maze");
 		
 		// get hold the content of the frame and set up the resolution of the game
-
 		JPanel panel = (JPanel) container.getContentPane();
 		panel.setPreferredSize(new Dimension(800,600));
 		panel.setLayout(null);
 		
 		// setup our canvas size and put it into the content of the frame
-
 		setBounds(0,0,800,600);
 		panel.add(this);
 		
 		// Tell AWT not to bother repainting our canvas since we're
-
 		// going to do that our self in accelerated mode
-
 		setIgnoreRepaint(true);
 		
 		// finally make the window visible 
-
 		container.pack();
 		container.setResizable(false);
 		container.setVisible(true);
 		
 		// add a listener to respond to the user closing the window. If they
-
 		// do we'd like to exit the game
-
 		container.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
 				System.exit(0);
@@ -93,26 +85,19 @@ public class Game extends Canvas {
 		});
 		
 		// add a key input system (defined below) to our canvas
-
 		// so we can respond to key pressed
-
 		addKeyListener(new KeyInputHandler());
 		
 		// request the focus so key events come to us
-
 		requestFocus();
 
 		// create the buffering strategy which will allow AWT
-
 		// to manage our accelerated graphics
-
 		createBufferStrategy(2);
 		strategy = getBufferStrategy();
 		
 		// initialize the entities in our game so there's something
-
 		// to see at startup
-
 		initEntities();
 	}
 	
@@ -122,7 +107,6 @@ public class Game extends Canvas {
 	 */
 	private void startGame() {
 		// clear out any existing entities and initialize a new set
-
 		entities.clear();
 		initEntities();
 		
@@ -142,12 +126,10 @@ public class Game extends Canvas {
 	 */
 	private void initEntities() {
 		// create the player ship and place it roughly in the center of the screen
-
-		player = new PlayerEntity(this,"sprites/ship0.gif",370,570,0);
+		player = new PlayerEntity(this,"sprites/ship.gif",370,570,0);
 		entities.add(player);
 		
 		// create a block of aliens (5 rows, by 12 aliens, spaced evenly)
-		
 		alienCount = 0;
 		/*Entity alien = new AlienEntity(this,"sprites/alien.gif",100,30,0);
 		entities.add(alien);
@@ -229,9 +211,72 @@ public class Game extends Canvas {
 		if (System.currentTimeMillis() - lastFire < firingInterval) {
 			return;
 		}
+		//variable to hold which sprite image to show
+		String s = "sprites/shot.gif";;
+		int sx = player.getX();
+		int sy = player.getY();
+		int dx = 0;
+		int dy = 0;
+		//change the direction of the shot entity based off of the direction the player is facing
+		switch ((int)player.getVector()) {
+			case 0:
+				dx = 0;
+				dy = -1;
+				sx += 10;
+				sy -= 30;
+				//s = "sprites/shot.gif";
+				break;
+			case 45:
+				dx = 1;
+				dy = -1;
+				sx += 30;
+				sy -= 30;
+				//s = "sprites/shot.gif";
+				break;
+			case 90:
+				dx = 1;
+				dy = 0;
+				sx += 30;
+				s = "sprites/shot90.gif";
+				break;
+			case 135:
+				dx = 1;
+				dy = 1;
+				sx += 30;
+				sy += 30;
+				//s = "sprites/shot.gif";
+				break;
+			case 180:
+				dx = 0;
+				dy = 1;
+				sy += 30;
+				sx += 10;
+				s = "sprites/shot180.gif";
+				break;
+			case 225:
+				dx = -1;
+				dy = 1;
+				sx -= 30;
+				sy += 30;
+				//s = "sprites/shot.gif";
+				break;
+			case 270:
+				dx = -1;
+				dy = 0;
+				sx -= 30;
+				s = "sprites/shot270.gif";
+				break;
+			case 315:
+				dx = -1;
+				dy = -1;
+				sx -= 30;
+				sy -= 30;
+				//s = "sprites/shot.gif";
+				break;
+		}
 		// if we waited long enough, create the shot entity, and record the time.
 		lastFire = System.currentTimeMillis();
-		ShotEntity shot = new ShotEntity(this,"sprites/shot.gif",player.getX(),player.getY(),player.getVector());
+		ShotEntity shot = new ShotEntity(this,s,sx,sy,(int)player.getVector(),dx,dy);
 				
 		entities.add(shot);
 	}
@@ -251,7 +296,6 @@ public class Game extends Canvas {
 		long lastLoopTime = System.currentTimeMillis();
 		
 		// keep looping round until the game ends
-
 		while (gameRunning) {
 			// work out how long its been since the last update, this
 			// will be used to calculate how far the entities should
@@ -358,22 +402,22 @@ public class Game extends Canvas {
 			}
 			//270 degrees
 			else if ((leftPressed) && (!rightPressed)) {
-				player.setSpriteImage("sprites/ship3.gif");
+				player.setSpriteImage("sprites/ship270.gif");
 				player.setHorizontalMovement(-moveSpeed);
 				player.setVector(270);
 			//90 degrees
 			} else if ((rightPressed) && (!leftPressed)) {
-				player.setSpriteImage("sprites/ship1.gif");
+				player.setSpriteImage("sprites/ship90.gif");
 				player.setHorizontalMovement(moveSpeed);
 				player.setVector(90);
 			//0 degrees
 			} else if ((upPressed) && (!downPressed)) {
-				player.setSpriteImage("sprites/ship0.gif");
+				player.setSpriteImage("sprites/ship.gif");
 				player.setVerticalMovement(-moveSpeed);
 				player.setVector(0);
 			//180 degrees
 			} else if ((downPressed) && (!upPressed)) {
-				player.setSpriteImage("sprites/ship2.gif");
+				player.setSpriteImage("sprites/ship180.gif");
 				player.setVerticalMovement(moveSpeed);
 				player.setVector(180);
 			}

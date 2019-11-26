@@ -2,8 +2,6 @@ package hunter.maze;
 
 /**
  * An entity which represents one of our space invader aliens.
- * 
- * @author Kevin Glass
  */
 public class AlienEntity extends Entity {
 	/** The speed at which the alien moves horizontally */
@@ -16,10 +14,10 @@ public class AlienEntity extends Entity {
 	 * 
 	 * @param game The game in which this entity is being created
 	 * @param ref The sprite which should be displayed for this alien
-	 * @param x The intial x location of this alien
-	 * @param y The intial y location of this alient
+	 * @param x The initial x location of this alien
+	 * @param y The initial y location of this alien
 	 */
-	public AlienEntity(Game game,String ref,int x,int y, int vector) {
+	public AlienEntity(Game game,String ref,int x,int y,int vector) {
 		super(ref,x,y,vector);
 		
 		this.game = game;
