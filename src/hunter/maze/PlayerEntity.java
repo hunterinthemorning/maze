@@ -29,6 +29,12 @@ public class PlayerEntity extends Entity {
 	 * @param delta The time that has elapsed since last move (ms)
 	 */
 	public void move(long delta) {
+		/* if the player tries to move through a wall */
+		if(!canMove()) {
+			this.canmove = true;
+			return;
+		}
+		
 		// if we're moving left and have reached the left hand side
 		// of the screen, don't move
 		if ((dx < 0) && (x < 10)) {
@@ -58,11 +64,14 @@ public class PlayerEntity extends Entity {
 	 */
 	public void collidedWith(Entity other) {
 		// if its an alien, notify the game that the player
-
 		// is dead
-
 		if (other instanceof AlienEntity) {
 			game.notifyDeath();
 		}
+		// if it is a wall, negate players movement
+		/*if (other instanceof WallEntity) {
+			//Tell running game cycle that an entity has collided with a wall
+			game.playerOnWall(other);
+		}*/
 	}
 }

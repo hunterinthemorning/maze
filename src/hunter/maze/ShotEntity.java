@@ -54,9 +54,7 @@ public class ShotEntity extends Entity {
 	 */
 	public void collidedWith(Entity other) {
 		// prevents double kills, if we've already hit something,
-
 		// don't collide
-
 		if (used) {
 			return;
 		}
@@ -70,7 +68,6 @@ public class ShotEntity extends Entity {
 			game.removeEntity(other);
 			
 			// notify the game that the alien has been killed
-
 			game.notifyAlienKilled();
 			used = true;
 		}

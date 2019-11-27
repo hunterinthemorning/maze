@@ -21,6 +21,8 @@ public class Game extends Canvas {
 	private boolean gameRunning = true;
 	/** The list of all the entities that exist in our game */
 	private ArrayList entities = new ArrayList();
+	// the list of walls
+	private ArrayList wallentities = new ArrayList();
 	/** The list of entities that need to be removed from the game this loop */
 	private ArrayList removeList = new ArrayList();
 	/** The entity representing the player */
@@ -30,9 +32,11 @@ public class Game extends Canvas {
 	/** The time at which last fired a shot */
 	private long lastFire = 0;
 	/** The interval between our players shot (ms) */
-	private long firingInterval = 500;
+	private long firingInterval = 250;
 	/** The number of aliens left on the screen */
 	private int alienCount;
+	// the entity that represents a wall that is not pasable
+	private Entity wall;
 	
 	/** The message to display which waiting for a key press */
 	private String message = "";
@@ -50,6 +54,9 @@ public class Game extends Canvas {
 	private boolean firePressed = false;
 	/** True if game logic needs to be applied this loop, normally as a result of a game event */
 	private boolean logicRequiredThisLoop = false;
+	
+
+	private int count = 0;
 	
 	/**
 	 * Construct our game and set it running.
@@ -141,6 +148,18 @@ public class Game extends Canvas {
 				alienCount++;
 			}
 		}*/
+		
+		// create walls with WallEntity generation
+		// first gen - 27 Nov 2019
+		//   generation of one wall entity for work of concept
+		for(int row = 0; row < 5; row++) {
+			wall = new WallEntity(this, "sprites/wall.png",100,(50)+row*32,0);
+			entities.add(wall);
+			//wall = new WallEntity(this, "sprites/wall.png",300,(50)+row*32,0);
+			//entities.add(wall);
+			wallentities.add(wall);
+		}
+		
 	}
 	
 	/**
@@ -168,6 +187,12 @@ public class Game extends Canvas {
 	public void notifyDeath() {
 		message = "Oh no! They got you, try again?";
 		waitingForKeyPress = true;
+	}
+	
+	public void playerOnWall(Entity entity) {
+		//message = "You have hit a wall";
+		//System.out.println("You have hit a wall");
+		entity.noMovement();
 	}
 	
 	/**
@@ -297,6 +322,20 @@ public class Game extends Canvas {
 		
 		// keep looping round until the game ends
 		while (gameRunning) {
+
+			/*for (int p=0;p<wallentities.size();p++) {
+				Entity w = (Entity) wallentities.get(p);
+				if(!player.wouldCollideWith(w) && player.collidesWith(w)) {
+					System.out.println("player moving away "+count);
+					count++;
+					if(count > 20) {
+						System.out.println("resetting movement");
+						player.resetMovement();
+						count = 0;
+					}
+				}
+			}*/
+
 			// work out how long its been since the last update, this
 			// will be used to calculate how far the entities should
 			// move this loop
@@ -314,14 +353,12 @@ public class Game extends Canvas {
 				for (int i=0;i<entities.size();i++) {
 					Entity entity = (Entity) entities.get(i);
 					entity.move(delta);
-					//System.out.println("Entity x:"+entity.getX()+" y:"+entity.getY());
 				}
 			}
 			
 			// cycle round drawing all the entities we have in the game
 			for (int i=0;i<entities.size();i++) {
 				Entity entity = (Entity) entities.get(i);
-				
 				entity.draw(g);
 			}
 			
@@ -378,26 +415,26 @@ public class Game extends Canvas {
 			//Check for any movement of player, Options are:
 			//315 degrees
 			if ((upPressed) && (leftPressed)) {
-				player.setHorizontalMovement(-moveSpeed);
-				player.setVerticalMovement(-moveSpeed);
+				player.setHorizontalMovement(-moveSpeed*0.75);
+				player.setVerticalMovement(-moveSpeed*0.75);
 				player.setVector(315);
 			}
 			//45 degrees
 			else if ((upPressed) && (rightPressed)) {
-				player.setHorizontalMovement(moveSpeed);
-				player.setVerticalMovement(-moveSpeed);
+				player.setHorizontalMovement(moveSpeed*0.75);
+				player.setVerticalMovement(-moveSpeed*0.75);
 				player.setVector(45);
 			}
 			//135 degrees
 			else if ((downPressed) && (rightPressed)) {
-				player.setHorizontalMovement(moveSpeed);
-				player.setVerticalMovement(moveSpeed);
+				player.setHorizontalMovement(moveSpeed*0.75);
+				player.setVerticalMovement(moveSpeed*0.75);
 				player.setVector(135);
 			}
 			//225 degrees
 			else if ((downPressed) && (leftPressed)) {
-				player.setHorizontalMovement(-moveSpeed);
-				player.setVerticalMovement(moveSpeed);
+				player.setHorizontalMovement(-moveSpeed*0.75);
+				player.setVerticalMovement(moveSpeed*0.75);
 				player.setVector(225);
 			}
 			//270 degrees
@@ -426,6 +463,23 @@ public class Game extends Canvas {
 			// if we're pressing fire, attempt to fire
 			if (firePressed) {
 				tryToFire();
+			}
+			
+			/* end of the loop processes
+			 * give the player the ability to move 
+			 *   if not on wall
+			 */
+			for (int p=0;p<wallentities.size();p++) {
+				Entity w = (Entity) wallentities.get(p);
+				if(!player.wouldCollideWith(w) && player.collidesWith(w)) {
+					System.out.println("player moving away "+count);
+					count++;
+					if(count > 20) {
+						System.out.println("resetting movement");
+						player.resetMovement();
+						count = 0;
+					}
+				}
 			}
 			
 			// finally pause for a bit. Note: this should run us at about

@@ -32,9 +32,7 @@ public class AlienEntity extends Entity {
 	 */
 	public void move(long delta) {
 		// if we have reached the left hand side of the screen and
-
 		// are moving left then request a logic update 
-
 		if ((dx < 0) && (x < 10)) {
 			game.updateLogic();
 		}
