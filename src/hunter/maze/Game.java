@@ -35,7 +35,7 @@ public class Game extends Canvas {
 	private long firingInterval = 250;
 	/** The number of aliens left on the screen */
 	private int alienCount;
-	// the entity that represents a wall that is not pasable
+	// the entity that represents a wall
 	private Entity wall;
 	
 	/** The message to display which waiting for a key press */
@@ -67,7 +67,7 @@ public class Game extends Canvas {
 		
 		// get hold the content of the frame and set up the resolution of the game
 		JPanel panel = (JPanel) container.getContentPane();
-		panel.setPreferredSize(new Dimension(800,600));
+		panel.setPreferredSize(new Dimension(810,600));
 		panel.setLayout(null);
 		
 		// setup our canvas size and put it into the content of the frame
@@ -132,6 +132,44 @@ public class Game extends Canvas {
 	 * entity will be added to the overall list of entities in the game.
 	 */
 	private void initEntities() {
+		String[][] themap = {
+				{"null","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null"},
+				{"null","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null"},
+				{"null","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null"},
+				{"null","null","null","wall","null","null","null","wall","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null"},
+				{"null","null","null","wall","null","null","null","wall","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null"},
+				{"null","null","null","wall","null","null","null","wall","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null"},
+				{"null","null","null","wall","null","null","null","wall","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null"},
+				{"null","null","null","wall","null","null","null","wall","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null"},
+				{"null","null","null","wall","null","null","null","wall","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null"},
+				{"null","null","null","wall","null","null","null","wall","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null"},
+				{"null","null","null","wall","null","null","null","wall","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null"},
+				{"null","null","null","wall","null","null","null","wall","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null"},
+				{"null","null","null","wall","null","null","null","wall","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null"},
+				{"null","null","null","wall","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null"},
+				{"null","null","null","wall","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null"},
+				{"null","null","null","wall","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null"},
+				{"null","null","null","wall","wall","wall","wall","wall","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null"},
+				{"null","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null"},
+				{"null","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null"},
+				{"null","null","null","null","null","null","null","null","null","null","null","null","ship","null","null","null","null","null","null","null","null","null","null","null"}
+			};
+	
+		for(int x = 0; x < 24; x++) {
+			for(int y = 0; y < 20; y++) {
+				//if(x == 12 && y == 19) {
+				if(themap[y][x] == "ship") {
+					player = new PlayerEntity(this,"sprites/ship.gif",32*x,30*y,0);
+					entities.add(player);
+				} else if(themap[y][x] == "wall") {
+					wall = new WallEntity(this, "sprites/wall.png",32*x,30*y,0);
+					entities.add(wall);
+					wallentities.add(wall);
+				}
+			}
+		}
+		
+		/*
 		// create the player ship and place it roughly in the center of the screen
 		player = new PlayerEntity(this,"sprites/ship.gif",370,570,0);
 		entities.add(player);
@@ -147,18 +185,18 @@ public class Game extends Canvas {
 				entities.add(alien);
 				alienCount++;
 			}
-		}*/
+		}
 		
 		// create walls with WallEntity generation
 		// first gen - 27 Nov 2019
 		//   generation of one wall entity for work of concept
-		for(int row = 0; row < 5; row++) {
+		/*for(int row = 0; row < 5; row++) {
 			wall = new WallEntity(this, "sprites/wall.png",100,(50)+row*32,0);
 			entities.add(wall);
 			//wall = new WallEntity(this, "sprites/wall.png",300,(50)+row*32,0);
 			//entities.add(wall);
 			wallentities.add(wall);
-		}
+		}*/
 		
 	}
 	
