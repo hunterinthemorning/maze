@@ -36,7 +36,7 @@ public class Game extends Canvas {
 	/** The number of aliens left on the screen */
 	private int alienCount;
 	// the entity that represents a wall
-	private Entity wall;
+	private Wall wall;
 	
 	/** The message to display which waiting for a key press */
 	private String message = "";
@@ -67,11 +67,11 @@ public class Game extends Canvas {
 		
 		// get hold the content of the frame and set up the resolution of the game
 		JPanel panel = (JPanel) container.getContentPane();
-		panel.setPreferredSize(new Dimension(810,600));
+		panel.setPreferredSize(new Dimension(768,640));
 		panel.setLayout(null);
 		
 		// setup our canvas size and put it into the content of the frame
-		setBounds(0,0,800,600);
+		setBounds(0,0,768,640);
 		panel.add(this);
 		
 		// Tell AWT not to bother repainting our canvas since we're
@@ -133,8 +133,8 @@ public class Game extends Canvas {
 	 */
 	private void initEntities() {
 		String[][] themap = {
-				{"null","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null"},
-				{"null","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null"},
+				{"wall","wall","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null","wall","wall"},
+				{"wall","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null","wall"},
 				{"null","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null"},
 				{"null","null","null","wall","null","null","null","wall","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null"},
 				{"null","null","null","wall","null","null","null","wall","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null"},
@@ -150,52 +150,40 @@ public class Game extends Canvas {
 				{"null","null","null","wall","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null"},
 				{"null","null","null","wall","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null"},
 				{"null","null","null","wall","wall","wall","wall","wall","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null"},
-				{"null","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null"},
-				{"null","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null"},
-				{"null","null","null","null","null","null","null","null","null","null","null","null","ship","null","null","null","null","null","null","null","null","null","null","null"}
+				{"null","null","null","null","null","null","null","null","null","null","null","null","wall","null","null","null","null","null","null","null","null","null","null","null"},
+				{"wall","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null","wall"},
+				{"wall","wall","null","null","null","null","null","null","null","null","null","null","ship","null","null","null","null","null","null","null","null","null","wall","wall"}
 			};
 	
 		for(int x = 0; x < 24; x++) {
 			for(int y = 0; y < 20; y++) {
 				//if(x == 12 && y == 19) {
 				if(themap[y][x] == "ship") {
-					player = new PlayerEntity(this,"sprites/ship.gif",32*x,30*y,0);
+					player = new PlayerEntity(this,"sprites/ship.gif",32*x,32*y,0);
 					entities.add(player);
 				} else if(themap[y][x] == "wall") {
-					wall = new WallEntity(this, "sprites/wall.png",32*x,30*y,0);
-					entities.add(wall);
+					wall = new Wall("sprites/wall.png",32*x,32*y);
 					wallentities.add(wall);
 				}
 			}
 		}
 		
-		/*
+		
 		// create the player ship and place it roughly in the center of the screen
-		player = new PlayerEntity(this,"sprites/ship.gif",370,570,0);
-		entities.add(player);
+		//player = new PlayerEntity(this,"sprites/ship.gif",370,570,0);
+		//entities.add(player);
 		
 		// create a block of aliens (5 rows, by 12 aliens, spaced evenly)
 		alienCount = 0;
-		/*Entity alien = new AlienEntity(this,"sprites/alien.gif",100,30,0);
+		Entity alien = new AlienEntity(this,"sprites/alien.gif",100,30,0);
 		entities.add(alien);
 		alienCount++;
-		for (int row=0;row<5;row++) {
+		/*for (int row=0;row<5;row++) {
 			for (int x=0;x<1;x++) {
 				Entity alien = new AlienEntity(this,"sprites/alien.gif",100+(x*50),(50)+row*30);
 				entities.add(alien);
 				alienCount++;
 			}
-		}
-		
-		// create walls with WallEntity generation
-		// first gen - 27 Nov 2019
-		//   generation of one wall entity for work of concept
-		/*for(int row = 0; row < 5; row++) {
-			wall = new WallEntity(this, "sprites/wall.png",100,(50)+row*32,0);
-			entities.add(wall);
-			//wall = new WallEntity(this, "sprites/wall.png",300,(50)+row*32,0);
-			//entities.add(wall);
-			wallentities.add(wall);
 		}*/
 		
 	}
@@ -207,6 +195,11 @@ public class Game extends Canvas {
 	 */
 	public void updateLogic() {
 		logicRequiredThisLoop = true;
+	}
+	
+	// get wall entities
+	public ArrayList getWalls() {
+		return wallentities;
 	}
 	
 	/**
@@ -226,13 +219,7 @@ public class Game extends Canvas {
 		message = "Oh no! They got you, try again?";
 		waitingForKeyPress = true;
 	}
-	
-	public void playerOnWall(Entity entity) {
-		//message = "You have hit a wall";
-		//System.out.println("You have hit a wall");
-		entity.noMovement();
-	}
-	
+
 	/**
 	 * Notification that the player has won since all the aliens
 	 * are dead.
@@ -361,19 +348,6 @@ public class Game extends Canvas {
 		// keep looping round until the game ends
 		while (gameRunning) {
 
-			/*for (int p=0;p<wallentities.size();p++) {
-				Entity w = (Entity) wallentities.get(p);
-				if(!player.wouldCollideWith(w) && player.collidesWith(w)) {
-					System.out.println("player moving away "+count);
-					count++;
-					if(count > 20) {
-						System.out.println("resetting movement");
-						player.resetMovement();
-						count = 0;
-					}
-				}
-			}*/
-
 			// work out how long its been since the last update, this
 			// will be used to calculate how far the entities should
 			// move this loop
@@ -384,7 +358,19 @@ public class Game extends Canvas {
 			// surface and blank it out
 			Graphics2D g = (Graphics2D) strategy.getDrawGraphics();
 			g.setColor(Color.black);
-			g.fillRect(0,0,800,600);
+			g.fillRect(0,0,768,640);
+			
+			// draw all walls in the game
+			for (int i=0;i<wallentities.size();i++) {
+				Wall entity = (Wall) wallentities.get(i);
+				entity.draw(g);
+			}
+
+			// cycle round drawing all the entities we have in the game
+			for (int i=0;i<entities.size();i++) {
+				Entity entity = (Entity) entities.get(i);
+				entity.draw(g);
+			}
 			
 			// cycle round asking each entity to move itself
 			if (!waitingForKeyPress) {
@@ -394,18 +380,12 @@ public class Game extends Canvas {
 				}
 			}
 			
-			// cycle round drawing all the entities we have in the game
-			for (int i=0;i<entities.size();i++) {
-				Entity entity = (Entity) entities.get(i);
-				entity.draw(g);
-			}
-			
 			// brute force collisions, compare every entity against
 			// every other entity. If any of them collide notify 
 			// both entities that the collision has occurred
 			for (int p=0;p<entities.size();p++) {
+				Entity me = (Entity) entities.get(p);
 				for (int s=p+1;s<entities.size();s++) {
-					Entity me = (Entity) entities.get(p);
 					Entity him = (Entity) entities.get(s);
 					
 					if (me.collidesWith(him)) {
@@ -413,6 +393,7 @@ public class Game extends Canvas {
 						him.collidedWith(me);
 					}
 				}
+				
 			}
 			
 			// remove any entity that has been marked for clear up
@@ -501,23 +482,6 @@ public class Game extends Canvas {
 			// if we're pressing fire, attempt to fire
 			if (firePressed) {
 				tryToFire();
-			}
-			
-			/* end of the loop processes
-			 * give the player the ability to move 
-			 *   if not on wall
-			 */
-			for (int p=0;p<wallentities.size();p++) {
-				Entity w = (Entity) wallentities.get(p);
-				if(!player.wouldCollideWith(w) && player.collidesWith(w)) {
-					System.out.println("player moving away "+count);
-					count++;
-					if(count > 20) {
-						System.out.println("resetting movement");
-						player.resetMovement();
-						count = 0;
-					}
-				}
 			}
 			
 			// finally pause for a bit. Note: this should run us at about

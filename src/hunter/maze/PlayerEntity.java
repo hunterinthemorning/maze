@@ -4,10 +4,18 @@ import hunter.maze.AlienEntity;
 import hunter.maze.Entity;
 import hunter.maze.Game;
 
+import java.awt.Rectangle;
+import java.util.ArrayList;
+
 /**The entity that represents the players ship**/
 public class PlayerEntity extends Entity {
 	/** The game in which the ship exists */
 	private Game game;
+	/** The rectangle used for this entity during collisions  resolution */
+	private Rectangle me = new Rectangle();
+	/** The rectangle used for other entities during collision resolution */
+	private Rectangle him = new Rectangle();
+	double playerx,playery;
 	
 	/**
 	 * Create a new entity to represent the players ship
@@ -29,12 +37,24 @@ public class PlayerEntity extends Entity {
 	 * @param delta The time that has elapsed since last move (ms)
 	 */
 	public void move(long delta) {
-		/* if the player tries to move through a wall */
-		if(!canMove()) {
-			this.canmove = true;
-			return;
+
+		// check walls to make sure player's movement wont intersect wall
+		ArrayList thewalls = game.getWalls();
+		for(int i=0; i<thewalls.size();i++) {
+			Wall other = (Wall)thewalls.get(i);
+			
+			playerx = x + ((delta * dx) / 1000);
+			playery = y + ((delta * dy) / 1000);
+			
+			me.setBounds((int)playerx,(int)playery,sprite.getWidth(),sprite.getHeight());
+			him.setBounds((int)other.x,(int)other.y,other.sprite.getWidth(),other.sprite.getHeight());
+
+			if(me.intersects(him)){
+				System.out.println("movement declined, player intersected wall");
+				return;
+			}
+			
 		}
-		System.out.printf("x: %s y: %s\n",x,y);
 		
 		// if we're moving left and have reached the left hand side
 		// of the screen, don't move
@@ -42,8 +62,8 @@ public class PlayerEntity extends Entity {
 			return;
 		}
 		// if we're moving right and have reached the right hand side
-		// of the screen, don't move
-		if ((dx > 0) && (x > 760)) {
+		// of the screen, don't move 768,640
+		if ((dx > 0) && (x > 736)) {
 			return;
 		}
 
@@ -51,11 +71,12 @@ public class PlayerEntity extends Entity {
 			return;
 		}
 
-		if ((dy > 0) && (y > 570)) {
+		if ((dy > 0) && (y > 608)) {
 			return;
 		}
 		
 		super.move(delta);
+		//super.move(1);
 	}
 	
 	/**
@@ -69,10 +90,5 @@ public class PlayerEntity extends Entity {
 		if (other instanceof AlienEntity) {
 			game.notifyDeath();
 		}
-		// if it is a wall, negate players movement
-		/*if (other instanceof WallEntity) {
-			//Tell running game cycle that an entity has collided with a wall
-			game.playerOnWall(other);
-		}*/
 	}
 }

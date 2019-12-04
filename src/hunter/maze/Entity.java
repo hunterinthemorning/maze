@@ -15,6 +15,8 @@ import java.awt.Rectangle;
  * accuracy as we move.
  */
 public abstract class Entity {
+	/** The game in which the entity exists */
+	private Game game;
 	/** The current x location of this entity */ 
 	protected double x;
 	/** The current y location of this entity */
@@ -31,10 +33,6 @@ public abstract class Entity {
 	private Rectangle me = new Rectangle();
 	/** The rectangle used for other entities during collision resolution */
 	private Rectangle him = new Rectangle();
-	/* the variable that holds if the entity can move
-	** true from the beginning of the game loop
-	*/
-	protected boolean canmove = true;
 	
 	/**
 	 * Construct a entity based on a sprite image and a location.
@@ -60,22 +58,6 @@ public abstract class Entity {
 		// update the location of the entity based on move speeds
 		x += (delta * dx) / 1000;
 		y += (delta * dy) / 1000;
-	}
-	
-	/* Allow no movement for entity
-	 * the entity has collidedWith a WallEntity
-	 */
-	public void noMovement() {
-		canmove = false;
-	}
-	
-	/* tell caller if entity canMove */
-	public boolean canMove() {
-		return canmove;
-	}
-	
-	public void resetMovement() {
-		canmove = true;
 	}
 	
 	/* function to change sprite's image
@@ -170,6 +152,18 @@ public abstract class Entity {
 	 * @return True if the entities collide with each other
 	 */
 	public boolean collidesWith(Entity other) {
+		/*if(other instanceof WallEntity && this instanceof PlayerEntity) {
+			System.out.printf("me: %s %s %s %s other: %s %s %s %s\n",(int) x,(int) y,sprite.getWidth(),sprite.getHeight(),(int) other.x,(int) other.y,other.sprite.getWidth(),other.sprite.getHeight());
+		}*/
+		me.setBounds((int) x,(int) y,sprite.getWidth(),sprite.getHeight());
+		him.setBounds((int) other.x,(int) other.y,other.sprite.getWidth(),other.sprite.getHeight());
+
+		return me.intersects(him);
+	}
+	public boolean collidesWith(Wall other) {
+		/*if(other instanceof WallEntity && this instanceof PlayerEntity) {
+			System.out.printf("me: %s %s %s %s other: %s %s %s %s\n",(int) x,(int) y,sprite.getWidth(),sprite.getHeight(),(int) other.x,(int) other.y,other.sprite.getWidth(),other.sprite.getHeight());
+		}*/
 		me.setBounds((int) x,(int) y,sprite.getWidth(),sprite.getHeight());
 		him.setBounds((int) other.x,(int) other.y,other.sprite.getWidth(),other.sprite.getHeight());
 
@@ -179,7 +173,7 @@ public abstract class Entity {
 	/* logic to see if movement would collide entities
 	** first used to reset player movement if moving away from a wall
 	*/
-	public boolean wouldCollideWith(Entity other) {
+	public boolean wouldCollideWith(Wall other) {
 		me.setBounds((int) x+(int)dx,(int) y+(int)dy,sprite.getWidth(),sprite.getHeight());
 		him.setBounds((int) other.x,(int) other.y,other.sprite.getWidth(),other.sprite.getHeight());
 
