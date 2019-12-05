@@ -2,6 +2,7 @@ package hunter.maze;
 
 import java.awt.Graphics;
 import java.awt.Rectangle;
+import java.util.ArrayList;
 
 /**
  * An entity represents any element that appears in the game. The

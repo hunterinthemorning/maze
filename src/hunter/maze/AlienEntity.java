@@ -1,5 +1,8 @@
 package hunter.maze;
 
+import java.awt.Rectangle;
+import java.util.ArrayList;
+
 /**
  * An entity which represents one of our space invader aliens.
  */
@@ -8,6 +11,11 @@ public class AlienEntity extends Entity {
 	private double moveSpeed = 75;
 	/** The game in which the entity exists */
 	private Game game;
+	/** The rectangle used for this entity during collisions  resolution */
+	private Rectangle me = new Rectangle();
+	/** The rectangle used for other entities during collision resolution */
+	private Rectangle him = new Rectangle();
+	double playerx,playery;
 	
 	/**
 	 * Create a new alien entity
@@ -31,6 +39,23 @@ public class AlienEntity extends Entity {
 	 * @param delta The time that has elapsed since last move
 	 */
 	public void move(long delta) {
+		ArrayList thewalls = game.getWalls();
+		for(int i=0; i<thewalls.size();i++) {
+			Wall other = (Wall)thewalls.get(i);
+			
+			playerx = x + ((delta * dx) / 1000);
+			playery = y + ((delta * dy) / 1000);
+			
+			me.setBounds((int)playerx,(int)playery,sprite.getWidth(),sprite.getHeight());
+			him.setBounds((int)other.x,(int)other.y,other.sprite.getWidth(),other.sprite.getHeight());
+
+			if(me.intersects(him)){
+				//System.out.println("movement reversed, alien intersected wall");
+				reverseDirection();
+				return;
+			}
+			
+		}
 		// if we have reached the left hand side of the screen and
 		// are moving left then request a logic update 
 		if ((dx < 0) && (x < 10)) {
@@ -55,6 +80,15 @@ public class AlienEntity extends Entity {
 		// proceed with normal move
 
 		super.move(delta);
+	}
+	
+	/* function for when alien hits a wall
+	 * reverse dy if 
+	 * reverse dx if
+	 */
+	private void reverseDirection() {
+		dy = -dy;
+		return;
 	}
 	
 	/**

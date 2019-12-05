@@ -33,6 +33,7 @@ public class Game extends Canvas {
 	private long lastFire = 0;
 	/** The interval between our players shot (ms) */
 	private long firingInterval = 250;
+	private Entity alien;
 	/** The number of aliens left on the screen */
 	private int alienCount;
 	// the entity that represents a wall
@@ -134,9 +135,9 @@ public class Game extends Canvas {
 	private void initEntities() {
 		String[][] themap = {
 				{"wall","wall","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null","wall","wall"},
-				{"wall","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null","wall"},
+				{"wall","null","null","null","null","null","null","null","null","alien","alien","null","null","null","null","null","alien","null","null","null","null","null","null","wall"},
 				{"null","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null"},
-				{"null","null","null","wall","null","null","null","wall","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null"},
+				{"null","null","null","wall","null","alien","null","wall","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null"},
 				{"null","null","null","wall","null","null","null","wall","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null"},
 				{"null","null","null","wall","null","null","null","wall","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null"},
 				{"null","null","null","wall","null","null","null","wall","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null","null"},
@@ -164,6 +165,10 @@ public class Game extends Canvas {
 				} else if(themap[y][x] == "wall") {
 					wall = new Wall("sprites/wall.png",32*x,32*y);
 					wallentities.add(wall);
+				} else if(themap[y][x] == "alien") {
+					alien = new AlienEntity(this,"sprites/alien.gif",32*x,32*y,0);
+					alienCount++;
+					entities.add(alien);
 				}
 			}
 		}
@@ -174,13 +179,13 @@ public class Game extends Canvas {
 		//entities.add(player);
 		
 		// create a block of aliens (5 rows, by 12 aliens, spaced evenly)
-		alienCount = 0;
-		Entity alien = new AlienEntity(this,"sprites/alien.gif",100,30,0);
+		//alienCount = 0;
+		/*Entity alien = new AlienEntity(this,"sprites/alien.gif",100,30,0);
 		entities.add(alien);
 		alienCount++;
-		/*for (int row=0;row<5;row++) {
+		for (int row=0;row<5;row++) {
 			for (int x=0;x<1;x++) {
-				Entity alien = new AlienEntity(this,"sprites/alien.gif",100+(x*50),(50)+row*30);
+				Entity alien = new AlienEntity(this,"sprites/alien.gif",100+(x*50),(50)+row*30,0);
 				entities.add(alien);
 				alienCount++;
 			}
